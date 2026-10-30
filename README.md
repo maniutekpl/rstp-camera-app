@@ -1,38 +1,58 @@
 # Domowe kamery
 
 Prosta aplikacja na Androida do podglądu kamer monitoringu przez RTSP (silnik LibVLC).
+Działa z kamerami w tej samej sieci Wi-Fi co telefon; sprawdzona z Dahua i Reolink.
 
-**Etap 2:** lista kamer zapisana na telefonie. Kamery dodajesz przyciskiem „Dodaj kamerę”
-(nazwa + adres `rtsp://…`), edytujesz i usuwasz przyciskiem „Edytuj”, a dotknięcie kamery otwiera podgląd. Kolejność zmienisz przyciskiem „Zmień kolejność” (strzałki ▲▼).
-W podglądzie dotknij obrazu albo obróć telefon, aby włączyć pełny ekran.
-Przycisk „Szukaj kamer” znajduje kamery w sieci Wi-Fi przez ONVIF (musi być włączony w kamerze;
-w Hikvision często trzeba go włączyć i dodać użytkownika ONVIF). Po wybraniu kamery i wpisaniu
-loginu i hasła aplikacja pobiera z kamery przez ONVIF prawdziwe adresy strumieni (główny i lżejszy
-do podglądu). Jeśli kamera nie odpowie, aplikacja pokazuje przyczynę i pozwala użyć typowych
-adresów dla Dahua, Hikvision i Reolink. Rejestrator (NVR/DVR) pokazuje listę kanałów do wybrania; każdy staje się
-osobną kamerą (nieprzetestowane na prawdziwym rejestratorze). Gdy lżejszy strumień w siatce nie działa, kafelek przełącza się na główny.
-Gdy kamera zgubi połączenie albo obraz się zatrzyma, aplikacja sama łączy się ponownie
-(po 2, 5, 10, a potem co 30 sekund).
-Przycisk „Wszystkie kamery” pokazuje siatkę z obrazem z każdej kamery (bez dźwięku).
-Do siatki warto podać w kamerze lżejszy „adres podglądu” (np. Hikvision `/Streaming/Channels/102`,
-Dahua `subtype=1`), bo kilka strumieni w pełnej jakości naraz mocno obciąża telefon.
-Lista kamer (razem z hasłami) jest zaszyfrowana kluczem z Android Keystore i nie trafia do kopii zapasowej w chmurze.
+## Instalacja
 
-## Wymagania
+1. Na telefonie otwórz stronę
+   [najnowszej wersji](https://github.com/maniutekpl/rstp-camera-app/releases/latest)
+   i pobierz plik `app-release.apk` (sekcja **Assets**).
+2. Otwórz pobrany plik. Telefon zapyta, czy zezwolić przeglądarce na instalowanie aplikacji
+   z nieznanych źródeł — zezwól (można to potem wyłączyć w ustawieniach).
+3. Jeśli Google Play Protect ostrzeże o nieznanym twórcy, wybierz **Więcej szczegółów →
+   Zainstaluj mimo to**. Aplikacja nie jest w Sklepie Play, stąd to ostrzeżenie.
+4. Aktualizacja: pobierz nowszy plik APK i zainstaluj go tak samo. Zapisane kamery zostaną.
 
-- Android Studio (zawiera Android SDK i Javę)
-- Telefon z Androidem 7.0 lub nowszym, z włączonym debugowaniem USB
-- Telefon i kamery w tej samej sieci Wi-Fi
+Wymagany Android 7.0 lub nowszy.
 
-## Uruchomienie
+## Jak używać
+
+- **Szukaj kamer** — znajduje kamery w sieci Wi-Fi przez ONVIF. Po wybraniu kamery i wpisaniu
+  loginu i hasła aplikacja sama pobiera adresy strumieni. ONVIF musi być włączony w kamerze:
+  w Dahua zwykle jest, w Hikvision często trzeba go włączyć i dodać użytkownika ONVIF,
+  w Reolink jest w ustawieniach serwera (kamery na baterię go nie mają).
+  Jeśli kamera nie odpowie, aplikacja pokaże przyczynę i pozwoli użyć typowych adresów.
+  Rejestrator (NVR/DVR) pokazuje listę kanałów do wybrania (jeszcze nieprzetestowane).
+- **Dodaj kamerę** — ręcznie: nazwa i adres `rtsp://…` (format niżej).
+- **Edytuj** — zmiana lub usunięcie kamery. **Zmień kolejność** — strzałki ▲▼.
+- **Podgląd** — dotknij kamery. Dotknij obrazu albo obróć telefon, aby włączyć pełny ekran.
+- **Wszystkie kamery** — siatka z obrazem z każdej kamery (bez dźwięku). Używa lżejszego
+  „adresu podglądu”, a gdy ten nie działa, przełącza się na główny strumień.
+- Gdy kamera zgubi połączenie albo obraz się zatrzyma, aplikacja sama łączy się ponownie.
+- Lista kamer (razem z hasłami) jest zaszyfrowana na telefonie i nie trafia do kopii zapasowej w chmurze.
+
+### Adresy RTSP
+
+Format: `rtsp://login:hasło@192.168.1.50:554/ścieżka`. Ścieżka zależy od producenta:
+
+| Producent | Główny strumień | Lżejszy (podgląd) |
+|-----------|-----------------|-------------------|
+| Hikvision | `/Streaming/Channels/101` | `/Streaming/Channels/102` |
+| Dahua | `/cam/realmonitor?channel=1&subtype=0` | `/cam/realmonitor?channel=1&subtype=1` |
+| Reolink | `/h264Preview_01_main` | `/h264Preview_01_sub` |
+
+Jeśli hasło zawiera znaki `@`, `:` albo `/`, trzeba je zakodować (`@` → `%40`).
+Przy wyszukiwaniu kamer aplikacja robi to sama.
+
+## Budowanie ze źródeł
+
+Wymagania: Android Studio (zawiera Android SDK i Javę) i telefon z włączonym debugowaniem USB.
 
 1. W Android Studio: **File → Open** i wskaż folder z tym projektem.
 2. Poczekaj, aż skończy się „Gradle sync” (za pierwszym razem pobiera sporo plików).
 3. Podłącz telefon kablem USB i zaakceptuj na nim zapytanie o debugowanie.
 4. Wybierz telefon na liście urządzeń u góry i naciśnij zielony przycisk **Run**.
 
-## Typowe adresy RTSP
-
-Format: `rtsp://login:hasło@192.168.1.50:554/ścieżka`. Ścieżka zależy od producenta,
-np. Hikvision `/Streaming/Channels/101`, Dahua `/cam/realmonitor?channel=1&subtype=0`.
-Jeśli hasło zawiera znaki `@`, `:` albo `/`, trzeba je zakodować (`@` → `%40`).
+Wersję do udostępnienia buduje się przez **Build → Generate Signed App Bundle or APK → APK**.
+Plik klucza (`.jks`) trzymaj poza repozytorium — każda kolejna wersja musi być podpisana tym samym kluczem.

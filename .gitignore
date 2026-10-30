@@ -10,3 +10,8 @@ local.properties
 *.jks
 *.keystore
 keystore.properties
+
+# Built packages are shared through GitHub Releases, not committed
+*.apk
+*.aab
+app/release/
