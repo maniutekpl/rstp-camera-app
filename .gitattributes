@@ -1,0 +1,5 @@
+# Keep LF line endings in the repository and in the working copy
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.jar binary

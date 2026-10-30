@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Lets the camera search receive multicast answers over Wi-Fi; granted without asking. -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+
+    <!-- allowBackup=false: camera passwords must not go to cloud backup;
+         the Keystore key is not backed up anyway, so restored data could not be decrypted. -->
+    <!-- usesCleartextTraffic: ONVIF on home cameras is plain HTTP, which Android 9+ blocks by default.
+         The app only talks to cameras in the local network. -->
+    <application
+        android:allowBackup="false"
+        android:usesCleartextTraffic="true"
+        android:label="Domowe kamery"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar">
+
+        <!-- configChanges: rotating the phone does not restart the activity,
+             so the video keeps playing instead of reconnecting. -->
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
