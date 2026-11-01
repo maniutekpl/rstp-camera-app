@@ -7,7 +7,9 @@ Działa z kamerami w tej samej sieci Wi-Fi co telefon; sprawdzona z Dahua i Reol
 
 1. Na telefonie otwórz stronę
    [najnowszej wersji](https://github.com/maniutekpl/rstp-camera-app/releases/latest)
-   i pobierz plik `app-release.apk` (sekcja **Assets**).
+   i pobierz plik `app-arm64-v8a-release.apk` (sekcja **Assets**). Pasuje do prawie
+   każdego telefonu. Jeśli instalacja się nie uda („aplikacja nie jest zgodna”), masz
+   starszy telefon — pobierz `app-armeabi-v7a-release.apk`.
 2. Otwórz pobrany plik. Telefon zapyta, czy zezwolić przeglądarce na instalowanie aplikacji
    z nieznanych źródeł — zezwól (można to potem wyłączyć w ustawieniach).
 3. Jeśli Google Play Protect ostrzeże o nieznanym twórcy, wybierz **Więcej szczegółów →
@@ -55,4 +57,7 @@ Wymagania: Android Studio (zawiera Android SDK i Javę) i telefon z włączonym 
 4. Wybierz telefon na liście urządzeń u góry i naciśnij zielony przycisk **Run**.
 
 Wersję do udostępnienia buduje się przez **Build → Generate Signed App Bundle or APK → APK**.
+Powstają dwa pliki, po jednym na typ procesora (`app-arm64-v8a-release.apk`,
+`app-armeabi-v7a-release.apk`); do wydania na GitHubie dołącz oba.
+Emulatory x86 nie są obsługiwane — testuj na telefonie.
 Plik klucza (`.jks`) trzymaj poza repozytorium — każda kolejna wersja musi być podpisana tym samym kluczem.

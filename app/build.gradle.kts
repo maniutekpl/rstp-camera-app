@@ -30,6 +30,17 @@ android {
     buildFeatures {
         compose = true
     }
+
+    // LibVLC ships ~50 MB of native code per CPU type, so build one APK per phone CPU
+    // instead of one APK with all four. x86/x86_64 (emulators only) are left out.
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a")
+            isUniversalApk = false
+        }
+    }
 }
 
 dependencies {
