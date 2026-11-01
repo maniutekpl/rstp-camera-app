@@ -12,8 +12,9 @@
     <application
         android:allowBackup="false"
         android:usesCleartextTraffic="true"
+        android:icon="@drawable/ic_launcher"
         android:label="Domowe kamery"
-        android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        android:theme="@style/Theme.DomoweKamery">
 
         <!-- configChanges: rotating the phone does not restart the activity,
              so the video keeps playing instead of reconnecting. -->

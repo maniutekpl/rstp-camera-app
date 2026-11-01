@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Round icon for Android 7.x, which has no adaptive icons. Same drawing as ic_launcher_foreground. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="@color/ic_launcher_background"
+        android:pathData="M2,54 a52,52 0 1,0 104,0 a52,52 0 1,0 -104,0 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M31,35.5 H77 A2,2 0 0 1 79,37.5 V39.5 A2,2 0 0 1 77,41.5 H31 A2,2 0 0 1 29,39.5 V37.5 A2,2 0 0 1 31,35.5 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M37,40.5 H71 A5,5 0 0 1 76,45.5 V53.5 A5,5 0 0 1 71,58.5 H37 A5,5 0 0 1 32,53.5 V45.5 A5,5 0 0 1 37,40.5 Z M35,49.5 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38.5,49.5 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0 Z" />
+    <path
+        android:fillColor="#FF5252"
+        android:pathData="M67,49.5 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M58,58 H64 V69 H58 Z M52,68.5 H76 A2,2 0 0 1 78,70.5 A2,2 0 0 1 76,72.5 H52 A2,2 0 0 1 50,70.5 A2,2 0 0 1 52,68.5 Z" />
+</vector>
