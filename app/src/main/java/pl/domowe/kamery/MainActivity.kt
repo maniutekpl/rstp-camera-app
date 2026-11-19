@@ -3,6 +3,7 @@
 package pl.domowe.kamery
 
 import android.app.Activity
+import android.content.Context
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
@@ -59,6 +60,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -92,6 +94,9 @@ private const val SCREEN_EDIT = "edit"
 private const val SCREEN_VIEW = "view"
 private const val SCREEN_GRID = "grid"
 private const val SCREEN_SCAN = "scan"
+
+private const val PREFS_SETTINGS = "settings"
+private const val KEY_SOUND_MUTED = "sound_muted"
 
 @Composable
 fun App(store: CameraStore) {
@@ -366,6 +371,10 @@ fun ViewScreen(camera: Camera, onBack: () -> Unit) {
     var fullscreenTapped by rememberSaveable { mutableStateOf(false) }
     val landscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val fullscreen = fullscreenTapped || landscape
+    // One mute setting for all cameras, remembered between app starts.
+    val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences(PREFS_SETTINGS, Context.MODE_PRIVATE) }
+    var soundMuted by remember { mutableStateOf(prefs.getBoolean(KEY_SOUND_MUTED, false)) }
 
     HideSystemBars(fullscreen)
     KeepScreenOn()
@@ -386,7 +395,17 @@ fun ViewScreen(camera: Camera, onBack: () -> Unit) {
                 OutlinedButton(onClick = onBack) { Text("Wróć") }
                 Button(onClick = { attempt++ }) { Text("Połącz ponownie") }
             }
-            Text(status, style = MaterialTheme.typography.bodyMedium)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    status,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.weight(1f),
+                )
+                TextButton(onClick = {
+                    soundMuted = !soundMuted
+                    prefs.edit().putBoolean(KEY_SOUND_MUTED, soundMuted).apply()
+                }) { Text(if (soundMuted) "🔇 Włącz dźwięk" else "🔊 Wycisz") }
+            }
         }
         Box(
             modifier = (if (fullscreen) Modifier.fillMaxSize() else Modifier.fillMaxWidth().aspectRatio(16f / 9f))
@@ -397,6 +416,7 @@ fun ViewScreen(camera: Camera, onBack: () -> Unit) {
                     url = camera.url,
                     onStatus = { status = it },
                     modifier = Modifier.fillMaxSize(),
+                    soundMuted = soundMuted,
                 )
             }
             // Transparent layer on top of the video: the video view itself would swallow taps.

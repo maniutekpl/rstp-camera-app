@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.SystemClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -29,6 +30,8 @@ fun RtspPlayer(
     onStatus: (String) -> Unit,
     modifier: Modifier = Modifier,
     muted: Boolean = false,
+    // Turns the sound off and on while playing, without reconnecting (unlike muted).
+    soundMuted: Boolean = false,
     // Used instead of url when url never played (e.g. a preview stream disabled in the camera).
     fallbackUrl: String? = null,
 ) {
@@ -38,6 +41,8 @@ fun RtspPlayer(
     val session = remember {
         StreamSession(context, url, fallbackUrl, muted, scope) { currentOnStatus(it) }
     }
+
+    LaunchedEffect(soundMuted) { session.setSoundMuted(soundMuted) }
 
     AndroidView(
         factory = { ctx ->
@@ -81,6 +86,9 @@ private class StreamSession(
     // When the playback time last moved; 0 = not seen yet, so the stall check stays off
     // for cameras that never report time.
     private var lastTimeChange = 0L
+    private var soundMuted = false
+    // VLC refuses the volume until the audio output exists, so it is retried on playback events.
+    private var volumeApplied = false
 
     private val watchdogJob = scope.launch {
         while (true) {
@@ -104,7 +112,19 @@ private class StreamSession(
         if (muted) media.addOption(":no-audio")
         player.media = media
         media.release()
+        volumeApplied = false
+        applyVolume()
         player.play()
+    }
+
+    fun setSoundMuted(value: Boolean) {
+        soundMuted = value
+        volumeApplied = false
+        applyVolume()
+    }
+
+    private fun applyVolume() {
+        if (!volumeApplied) volumeApplied = player.setVolume(if (soundMuted) 0 else 100) == 0
     }
 
     fun release() {
@@ -127,8 +147,12 @@ private class StreamSession(
                     if (event.buffering >= 100f) "Odtwarzanie"
                     else "Buforowanie… ${event.buffering.toInt()}%"
                 )
-            MediaPlayer.Event.Playing -> onStatus("Odtwarzanie")
+            MediaPlayer.Event.Playing -> {
+                onStatus("Odtwarzanie")
+                applyVolume()
+            }
             MediaPlayer.Event.TimeChanged -> {
+                applyVolume()
                 played = true
                 failures = 0
                 lastTimeChange = SystemClock.elapsedRealtime()

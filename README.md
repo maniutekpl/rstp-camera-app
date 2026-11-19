@@ -29,6 +29,7 @@ Wymagany Android 7.0 lub nowszy.
 - **Dodaj kamerę** — ręcznie: nazwa i adres `rtsp://…` (format niżej).
 - **Edytuj** — zmiana lub usunięcie kamery. **Zmień kolejność** — strzałki ▲▼.
 - **Podgląd** — dotknij kamery. Dotknij obrazu albo obróć telefon, aby włączyć pełny ekran.
+  Przycisk **Wycisz** wyłącza dźwięk; aplikacja pamięta ten wybór dla wszystkich kamer.
 - **Wszystkie kamery** — siatka z obrazem z każdej kamery (bez dźwięku). Używa lżejszego
   „adresu podglądu”, a gdy ten nie działa, przełącza się na główny strumień.
 - Gdy kamera zgubi połączenie albo obraz się zatrzyma, aplikacja sama łączy się ponownie.
